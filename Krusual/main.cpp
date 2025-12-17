@@ -1,36 +1,21 @@
-#include "Graph.h"
+ï»¿#include "Graph.h"
 #include "GraphFileIO.h"
 #include <cstdio>
 
 int main() {
-    printf("=== ´Ó±ê×¼Í¼¸ñÊ½ÎÄ¼ş¶ÁÈ¡Êı¾İ ===\n");
+    // åˆ›å»ºä¸€ä¸ªè¶³å¤Ÿå¤§çš„å›¾å¯¹è±¡ï¼ˆä¾‹å¦‚ï¼Œé¢„è®¡æœ€å¤š100ä¸ªé¡¶ç‚¹ï¼‰
+    Graph myGraph(100);
 
-    // ´ÓÎÄ¼ş¶ÁÈ¡Í¼
-    GraphFileIO io("graph.txt");
-    Graph* graph = io.readGraphFromFile();
+    // ä½¿ç”¨GraphFileIOè¯»å–æ–‡ä»¶å¹¶æ„å»ºå›¾
+    if (GraphFileIO::readNodesAndBuildGraph(myGraph, "nodes.txt")) {
+        std::printf("æ–‡ä»¶è¯»å–æˆåŠŸï¼å›¾ä¿¡æ¯å¦‚ä¸‹ï¼š\n");
+        myGraph.printGraph(); // æ‰“å°å›¾ä¿¡æ¯
 
-    if (graph != nullptr) {
-        // ´òÓ¡Í¼ĞÅÏ¢
-        graph->printGraph();
-
-        // Ö´ĞĞKruskalËã·¨
-        graph->kruskalMST();
-
-        // ÊÍ·ÅÄÚ´æ
-        delete graph;
+        std::printf("\n è®¡ç®—æœ€å°ç”Ÿæˆæ ‘ï¼š\n");
+        myGraph.kruskalMST(); // æ‰§è¡ŒKruskalç®—æ³•
     }
-
-    printf("\n=== ÊÖ¶¯¹¹½¨Í¼²âÊÔ ===\n");
-
-    // ÊÖ¶¯¹¹½¨²âÊÔ£¨¿ÉÑ¡£©
-    Graph manualGraph(4);
-    manualGraph.addEdge(0, 1, 1);
-    manualGraph.addEdge(1, 2, 2);
-    manualGraph.addEdge(2, 3, 3);
-    manualGraph.addEdge(0, 3, 4);
-
-    manualGraph.printGraph();
-    manualGraph.kruskalMST();
-
+    else {
+        std::fprintf(stderr, "æ–‡ä»¶è¯»å–å¤±è´¥\n");
+    }
     return 0;
 }

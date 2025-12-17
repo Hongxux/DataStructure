@@ -3,7 +3,7 @@
 
 #include "Edge.h"
 class UnionFind; // 前向声明
-
+class Node;
 class Graph {
 private:
     int vertices;     // 顶点数量
@@ -14,6 +14,8 @@ private:
     // 堆排序相关方法
     void heapify(Edge* edges[], int n, int i) const;
     void buildHeap(Edge* edges[], int n)const;
+    double calDistance(double x1, double y1, double x2, double y2) const;
+
 
 public:
     static const int INF = 2147483647; // 无穷大表示
@@ -22,6 +24,7 @@ public:
     ~Graph();
 
     // 图操作
+    void NodesToEdges(Node nodes[], int nodes_n);
     void addEdge(int u, int v, int weight);
     void printGraph() const;
 
@@ -30,6 +33,8 @@ public:
     void kruskalMST() const;
 
     // 辅助方法
+
+    void NodesToEdges(Graph& graph, Node* nodes[], int nodes_n);
     int getVertices() const { return vertices; }
     int getEdgeCount() const { return edgeCount; }
 };

@@ -27,6 +27,9 @@
     <ClInclude Include="GraphFileIO.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Edge.cpp">
@@ -44,8 +47,16 @@
     <ClCompile Include="GraphFileIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="graph.txt" />
+    <Text Include="nodes.txt" />
+    <Text Include="normal_nodes.txt" />
+    <Text Include="large_nodes.txt" />
+    <Text Include="collinear_nodes.txt" />
+    <Text Include="empty_nodes.txt" />
   </ItemGroup>
 </Project>

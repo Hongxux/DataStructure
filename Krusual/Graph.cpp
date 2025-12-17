@@ -8,9 +8,11 @@
 
 #include "Graph.h"
 #include "UnionFind.h"
+#include "Node.h"
 #include <iostream>
 #include <algorithm>
 #include <climits>
+
 
  /**
   * @brief 图类构造函数
@@ -49,6 +51,7 @@ Graph::~Graph() {
     }
     std::cout << "图资源已释放" << std::endl;
 }
+
 
 /**
  * @brief 向图中添加无向边
@@ -97,10 +100,96 @@ void Graph::addEdge(int u, int v, int weight) {
     // 添加新边
     edgesArray[edgeCount] = new Edge(u, v, weight);
     edgeCount++;
-    std::cout << "添加边成功: " << u << " - " << v << " 权重: " << weight
-        << " (总边数: " << edgeCount << ")" << std::endl;
+   
+}
+double calDistance(double x1, double x2,double y1, double y2) {
+    double deltaX = x2 - x1;
+    double deltaY = y2 - y1;
+    return std::sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
+/**
+ * @brief 将节点数组转换为图的边
+ * @param graph 图对象的引用，用于添加边
+ * @param nodes 节点指针数组
+ * @param nodes_n 节点数量
+ * @note 为每对不同的节点计算欧几里得距离作为边权重，并添加到图中
+ */
+void NodesToEdges(Graph& graph, Node* nodes[], int nodes_n) {
+    // 输入参数验证
+    if (nodes == nullptr) {
+        std::cerr << "错误：节点数组指针为 nullptr" << std::endl;
+        return;
+    }
+
+    if (nodes_n <= 1) {
+        std::cerr << "警告：节点数量 " << nodes_n << " 不足，无法形成边" << std::endl;
+        return;
+    }
+
+    std::cout << "开始将 " << nodes_n << " 个节点转换为边..." << std::endl;
+    int edgesAdded = 0;
+    int skippedCount = 0;
+
+    // 遍历所有节点对
+    for (int i = 0; i < nodes_n; i++) {
+        // 检查当前节点是否有效
+        if (nodes[i] == nullptr) {
+            std::cerr << "警告：跳过空节点索引 " << i << std::endl;
+            skippedCount++;
+            continue;
+        }
+
+        for (int j = i + 1; j < nodes_n; j++) {
+            // 检查目标节点是否有效
+            if (nodes[j] == nullptr) {
+                std::cerr << "警告：跳过空节点索引 " << j << std::endl;
+                skippedCount++;
+                continue;
+            }
+
+            try {
+                // 计算节点间的欧几里得距离
+                double x1 = nodes[i]->getX();
+                double y1 = nodes[i]->getY();
+                double x2 = nodes[j]->getX();
+                double y2 = nodes[j]->getY();
+
+                // 验证坐标值有效性
+                if (std::isnan(x1) || std::isnan(y1) || std::isnan(x2) || std::isnan(y2) ||
+                    std::isinf(x1) || std::isinf(y1) || std::isinf(x2) || std::isinf(y2)) {
+                    std::cerr << "警告：节点 " << i << " 或 " << j << " 的坐标值无效，跳过边创建" << std::endl;
+                    skippedCount++;
+                    continue;
+                }
+
+                float dis = calDistance(x1, x2, y1, y2);
+
+                // 验证距离值有效性
+                if (dis < 0 || std::isnan(dis) || std::isinf(dis)) {
+                    std::cerr << "警告：节点 " << i << " 和 " << j << " 的计算距离无效: " << dis << "，跳过边创建" << std::endl;
+                    skippedCount++;
+                    continue;
+                }
+
+                // 通过 graph 对象调用 addEdge 方法
+                graph.addEdge(i, j, dis);
+                edgesAdded++;
+
+            }
+            catch (const std::exception& e) {
+                std::cerr << "错误：处理节点 " << i << " 和 " << j << " 时发生异常: " << e.what() << std::endl;
+                skippedCount++;
+            }
+            catch (...) {
+                std::cerr << "错误：处理节点 " << i << " 和 " << j << " 时发生未知异常" << std::endl;
+                skippedCount++;
+            }
+        }
+    }
+
+    std::cout << "节点转换完成：成功添加 " << edgesAdded << " 条边，跳过 " << skippedCount << " 个无效节点/边" << std::endl;
+}
 /**
  * @brief 打印图的边列表信息
  */
@@ -150,7 +239,7 @@ void Graph::heapify(Edge* edges[], int n, int i) const {
 
     // 如果最大值不是当前节点，交换并递归调整
     if (largest != i) {
-        // 直接交换指针，无需临时对象
+        // 直接交换指针
         Edge* temp = edges[i];
         edges[i] = edges[largest];
         edges[largest] = temp;

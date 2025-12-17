@@ -130,6 +130,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphFileIO.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="UnionFind.h" />
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +138,16 @@
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphFileIO.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="UnionFind.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="collinear_nodes.txt" />
+    <Text Include="empty_nodes.txt" />
     <Text Include="graph.txt" />
+    <Text Include="large_nodes.txt" />
+    <Text Include="nodes.txt" />
+    <Text Include="normal_nodes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
